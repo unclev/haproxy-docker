@@ -1,0 +1,10 @@
+**.git/
+**~
+**.bak
+manager/*
+haproxy/*
+certbot/
+!config/haproxy
+config/haproxy/*.my
+config/haproxy/*.origin
+

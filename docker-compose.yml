@@ -1,0 +1,50 @@
+version: '2'
+
+networks:
+
+  default:
+    external:
+      name: haproxy_default
+
+volumes:
+
+  webroot:
+    driver_opts:
+      device: /srv/letsencrypt/config/webroot
+      type: none
+      o: bind
+
+  config:
+    driver_opts:
+      device: /srv/letsencrypt/config/letsencrypt
+      type: none
+      o: bind
+
+  work:
+
+services:
+
+  haproxy:
+    build: haproxy
+    volumes:
+      - './config/haproxy/haproxy.cfg:/etc/haproxy/haproxy.cfg'
+      - 'webroot:/var/acme-webroot'
+    ports:
+      - "80:80"
+      
+  cli:
+    image: bringnow/letsencrypt-manager:latest
+    volumes:
+      - 'config:/etc/letsencrypt'
+      - 'work:/var/lib/letsencrypt'
+      - 'webroot:/var/acme-webroot'
+
+  cron:
+    image: bringnow/letsencrypt-manager:latest
+    volumes:
+      - 'config:/etc/letsencrypt'
+      - 'work:/var/lib/letsencrypt'
+      - 'webroot:/var/acme-webroot'
+    command: cron-auto-renewal
+    restart: always
+
