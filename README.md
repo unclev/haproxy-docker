@@ -11,6 +11,16 @@ origin  https://github.com/bringnow/docker-letsencrypt-manager.git (fetch)
 origin  https://github.com/bringnow/docker-letsencrypt-manager.git (push)
 ```
 
+**registering bunch of domain names**
+
+Even though letsencrypt does not issue wildcard certificates, it is posiuble requesting a cert with up to 100 alternative domain names. To simplify the procedure they can be stored in a plan text file, say ``example.tld.list`` containing one domain name per line, and be requested with
+
+```sh
+letsencrypt-manager add `cat example.tld.list`
+```
+
+Please make sure haproxy responds on each of the domain requests, else the certificate will not be issued.
+
 - **haproxy**
 ```sh
 git remote -v
